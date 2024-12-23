@@ -271,7 +271,7 @@ void Task8() {
     cout << "Введите целочисленный диапазон через пробел: "; cin >> a >> b;
     int minn = min(a, b);
     int maxx = max(a, b);
-    compressArray(mass, minn, maxx, n);
+    deleteFromDiap(mass, minn, maxx, n);
     ShowArrDouble(mass, n);
 
     delete[] mass;

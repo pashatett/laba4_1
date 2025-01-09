@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <iomanip>
 #include <ctime>
 #include <cmath>
@@ -17,7 +17,9 @@ int N();
 void Task1();
 void Task2();
 void Task3();
+double SumElEvDouble(double* mass, int n);
 void Task4();
+int MultIntAfterMax(int* mass, int n);
 void Task5();
 void Task6();
 int linealSearch(double* mass, int n, double searchh);
@@ -30,8 +32,8 @@ void Task9();
 void helpIntFastSort(int* array, int size, int low, int high);
 int partition(int* array, int size, int low, int high);
 void Task10();
-double SumElEvDouble(double* mass, int n);
-int MultIntAfterMax(int* mass, int n);
+int bin_search(const int n, int* arr, int k);
+void quicksort(const int n, int* arr);
 
 int main()
 {
@@ -82,8 +84,6 @@ int main()
             cout << "Такой задачи нет((";
             break;
         }
-
-    
 }
 
 int N() {
@@ -267,13 +267,10 @@ void Task8() {
     double* mass = newArrDouble(n);
     ShowArrDouble(mass, n);
     int a, b;
-
     cout << "Введите целочисленный диапазон через пробел: "; cin >> a >> b;
     int minn = min(a, b);
     int maxx = max(a, b);
-    deleteFromDiap(mass, minn, maxx, n);
     ShowArrDouble(mass, n);
-
     delete[] mass;
 }
 
@@ -326,25 +323,63 @@ int partition(int* array, int size, int low, int high) {
 }
 
 void Task10() {
-    int n = N();
-    int* mass = newArrInt(n);
-    ShowArrInt(mass, n);
-    SelectionSortInt(mass, n);
-    ShowArrInt(mass, n);
+    int n;
+    cout << "Введите размер массива" << endl;
+    cin >> n;
 
+    int* mas = new int[n];
+    RandArrInt(mas,n);
+    quicksort(n, mas);
+    ShowArrInt(mas, n);
+
+    int p, k;
+    cout << "Введите элемент для бинарного поиска в массиве" << endl;
+    cin >> k;
+    p = bin_search(n, mas, k);
+    if (p != -1)
+        cout << "Элемент под номером " << p + 1 << endl;
+    else
+        cout << "Элемента нет" << endl;
+
+    delete[] mas;
 }
 
-void SelectionSortInt(int* mass, int n) {
-    for (int i = 0; i < n - 1; i++) {
-        int min_index = i;
-        for (int j = i + 1; j < n; j++)
-            if (mass[j] < mass[min_index])
-                min_index = j;
-        if (min_index != i)
-        {
-            double temp = mass[i];
-            mass[i] = mass[min_index];
-            mass[min_index] = temp;
-        }
+int bin_search(const int n, int* arr, int k) {
+    int left = 0, right = n - 1, mid;
+    while (left <= right) {
+        mid = (left + right) / 2;
+        if (arr[mid] == k)
+            return mid;
+        if (arr[mid] > k)
+            right = mid - 1;
+        if (arr[mid] < k)
+            left = mid + 1;
     }
+    return -1;
+}
+
+void quicksort(const int n, int* arr) {
+    int i = 0, j = n - 1;
+    int temp, p;
+    p = arr[n >> 1];
+
+    do {
+        while (arr[i] < p)
+            i++;
+        while (arr[j] > p)
+            j--;
+
+        if (i <= j) {
+            temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+            i++;
+            j--;
+        }
+    } while (i <= j);
+
+    if (j >= 0)
+        quicksort(j + 1, arr);
+    if (n > i)
+        quicksort(n - i, &arr[i]);
 }
